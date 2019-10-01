@@ -71,3 +71,7 @@ A realistic usage for this is:
 ## Why is this useful
 
 There are many uses cases for peer-to-peer comms without a mediating 3rd party server. However, the most improtant one (for me at least) is latency reduction. Using this tool, one can SSH between 2 machines behind NATs directly, without the additional latency of an intermediate server.
+
+## Security implications
+
+This tool simply exposes your internal machine _directly_ to the internet, without authentication. This is perfectly fine if your machine merely exposes an SSH server, or any other encrypted and authenticated service. However, care must be taken not to expose plain-text or insecure services from your local machine to the internet.
