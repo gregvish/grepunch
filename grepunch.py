@@ -71,6 +71,9 @@ def main(peer, virtual_subnet='169.254.100.0/30'):
                     if e.errno == errno.ENOPROTOOPT:
                         print(e)
                         continue
+                    elif e.errno == errno.EMSGSIZE:
+                        # TODO: why?
+                        continue
                     raise
                 if pack[IP_PROTO_OFFSET] == socket.IPPROTO_ICMP:
                     print('Got ICMP from other side')
