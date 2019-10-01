@@ -46,7 +46,7 @@ Alice -- NAT_A <-------> NAT_B -- Bob
 ## Limitations
 
 Apart from the obvious issue of some NATs not supporting GRE at all, there are additional limitations:
-1) 2 different machines behind NAT_A can't, at the same time, communicate with the **same** machine behind NAT_B.
+1) 2 different machines behind NAT_A can't, **at the same time**, communicate with a machine behind NAT_B.
 2) If Alice and Bob are behind the **same** NAT (i.e., on the same external carrier-NAT IP), they can't communicate.
 
 ## Tool requirements
