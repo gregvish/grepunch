@@ -38,12 +38,13 @@ Asume the following scenario. Alice and Bob have internal IP addresses behind sy
 Alice -- NAT_A <-------> NAT_B -- Bob
 
 1) Alice sends a GRE packet to the IP of NAT_B. This makes NAT_A pass the packet to NAT_B, and configures NAT_A to pass any incoming packet _from_ NAT_B to Alice.
-2) NAT_B receives this unsolicied GRE packet and drops it.
+2) NAT_B receives this unsolicited GRE packet and drops it.
 3) Bob sends a GRE packet to the IP of NAT_A. This makes NAT_B pass the packet to NAT_A, and configures NAT_B to pass any incoming packet _from_ NAT_A to Bob.
 4) This packet arrives at NAT_A, which will now pass this packet to Alice due to step 1.
 5) Bidierectional comms have been established!
 
+## Limitations
 
-
-
-
+Apart from the obvious issue of NATs not supporting GRE at all, there are additional limitations:
+1) 2 different machines behind NAT_A can't, at the same time, communicate with the **same** machine behind NAT_B.
+2) If Alice and Bob are behind the **same** NAT (i.e., on the same external carrier-NAT IP), they can't communicate.
