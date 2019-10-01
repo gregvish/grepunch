@@ -96,7 +96,7 @@ class GREPunch:
 
         gre.send(GRE_HEADER + pack)
 
-    def punch_and_serve(self):
+    def _punch_and_serve_impl(self):
         gre = socket.socket(socket.AF_INET, socket.SOCK_RAW, IPPROTO_GRE)
         gre.connect((self._peer, 0))
 
@@ -123,6 +123,13 @@ class GREPunch:
                     self._tun_to_gre(tun, gre)
                 elif fd is gre:
                     self._gre_to_tun(tun, gre)
+
+    def punch_and_serve(self):
+        try:
+            self._punch_and_serve_impl()
+        except BaseException as e:
+            self._log.exception(e)
+            raise
 
 
 def main():
