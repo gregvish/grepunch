@@ -27,7 +27,7 @@ PPTP uses a TCP connection (port 1723) for control packets, and a GRE tunnel for
 Unlike TCP, UDP or ICMP, the GRE header has very little fields. In fact, there isn't any field that can be used by NATs in order to distinguish one "session" from another. The endpoints of a GRE session are identified only by their source and dest IP. Unsurprisingly, this is difficult for NATs to handle, _and many of them do not_.
 However, since the PPTP protocol was rather improtant for the corporate types, there was likely enough pressure to support it where possible. This seems to be especially true of the carrier-grade NATs, since otherwise customers of mobile carriers could not have possibly used PPTP.
 
-A symmetric NAT identifies each GRE session by _both_ source and dest IPs. Therefore, multiple different machines behind the same NAT can connect to the same internet IP. Additionaly, one machine behind the NAT can connect to multiple internet IPs. Therefore, GRE can be supported by a symmetric NAT.
+A symmetric NAT identifies each GRE session by _both_ source and dest IPs. Therefore, a machine behind a NAT can connect to multiple *different* internet IPs. However, multiple machines behind the same NAT can't connect to the *same* internet IP. Therefore GRE behind a symmetric NAT will "mostly" work.
 
 ## Using GRE for NAT traversal
 
