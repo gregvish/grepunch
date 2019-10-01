@@ -1,7 +1,7 @@
 # grepunch
 ## A tool for GRE hole punching
 
-_Warning_: This won't work for all NATs. (Only for some subset of symmetric NATs). So far only few have been tested, but most worked.
+_Warning_: This won't work for all NATs (only for some subset of symmetric NATs). So far only few have been tested, but most worked.
 
 This tool enables direct peer-to-peer communication between 2 machines, each located behind a different **Symmetric NAT**, if both NATs support GRE traffic.
 The various types of NAT are described here: https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation
@@ -26,3 +26,24 @@ PPTP uses a TCP connection (port 1723) for control packets, and a GRE tunnel for
 
 Unlike TCP, UDP or ICMP, the GRE header has very little fields. In fact, there isn't any field that can be used by NATs in order to distinguish one "session" from another. The endpoints of a GRE session are identified only by their source and dest IP. Unsurprisingly, this is difficult for NATs to handle, _and many of them do not_.
 However, since the PPTP protocol was rather improtant for the corporate types, there was likely enough pressure to support it where possible. This seems to be especially true of the carrier-grade NATs, since otherwise customers of mobile carriers could not have possibly used PPTP.
+
+A symmetric NAT identifies each GRE session by _both_ source and dest IPs. Therefore, multiple different machines behind the same NAT can connect to the same internet IP. Additionaly, one machine behind the NAT can connect to multiple internet IPs. Therefore, GRE can be supported by a symmetric NAT.
+
+## Using GRE for NAT traversal
+
+Since a GRE session is identified only by souce/dest IPs, there are no additional identifiers to guess in order to "punch a hole" through the NAT. The only requirement is knowing *both* external IPs of the NATs by both parties in advance (much like _UDP hole punching_).
+
+Asume the following scenario. Alice and Bob have internal IP addresses behind symmetric NATs:
+
+Alice -- NAT_A <-------> NAT_B -- Bob
+
+1) Alice sends a GRE packet to the IP of NAT_B. This makes NAT_A pass the packet to NAT_B, and configures NAT_A to pass any incoming packet _from_ NAT_B to Alice.
+2) NAT_B receives this unsolicied GRE packet and drops it.
+3) Bob sends a GRE packet to the IP of NAT_A. This makes NAT_B pass the packet to NAT_A, and configures NAT_B to pass any incoming packet _from_ NAT_A to Bob.
+4) This packet arrives at NAT_A, which will now pass this packet to Alice due to step 1.
+5) Bidierectional comms have been established!
+
+
+
+
+
