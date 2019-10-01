@@ -53,6 +53,7 @@ Apart from the obvious issue of some NATs not supporting GRE at all, there are a
 
 * Python 3
 * `sudo pip3 install pytap2`
+* `sudo pip3 install python-daemon`
 
 ## Using this tool
 

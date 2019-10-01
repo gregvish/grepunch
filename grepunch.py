@@ -8,6 +8,7 @@ import select
 import random
 import time
 
+import daemon
 import pytap2
 
 
@@ -26,13 +27,11 @@ KEEPALIVE_TIMEOUT = 5
 
 
 class GREPunch:
-    def __init__(self, peer, virt_subnet, daemonize=False):
+    def __init__(self, peer, virt_subnet):
         self._log = logging.getLogger(self.__class__.__name__)
         self._last_keepalive = time.monotonic()
         self._alive_state = False
-
         self._peer = peer
-        self._daemonize = daemonize
 
         self._subnet = ipaddress.ip_network(virt_subnet)
         self._local_ip = str(max(self._subnet.hosts()))
@@ -133,15 +132,22 @@ def main():
     parser.add_argument('--virt_subnet', default='169.254.100.0/30',
                         help='Subnet for local interface with the virtual peer IP')
     parser.add_argument('--daemon', action='store_true', help='Daemonize')
+    parser.add_argument('--logfile', default=None, help='Log file name')
     args = parser.parse_args()
 
     logging.basicConfig(
         level=logging.DEBUG,
+        filename=args.logfile,
         format='%(name)s: %(asctime)s %(levelname)s: %(message)s'
     )
 
-    grepunch = GREPunch(args.peer, args.virt_subnet, daemonize=args.daemon)
-    grepunch.punch_and_serve()
+    grepunch = GREPunch(args.peer, args.virt_subnet)
+
+    if args.daemon:
+        with daemon.DaemonContext(files_preserve=[logging.root.handlers[0].stream.fileno()]):
+            grepunch.punch_and_serve()
+    else:
+        grepunch.punch_and_serve()
 
 
 if __name__ == '__main__':
