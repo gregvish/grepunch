@@ -45,6 +45,29 @@ Alice -- NAT_A <-------> NAT_B -- Bob
 
 ## Limitations
 
-Apart from the obvious issue of NATs not supporting GRE at all, there are additional limitations:
+Apart from the obvious issue of some NATs not supporting GRE at all, there are additional limitations:
 1) 2 different machines behind NAT_A can't, at the same time, communicate with the **same** machine behind NAT_B.
 2) If Alice and Bob are behind the **same** NAT (i.e., on the same external carrier-NAT IP), they can't communicate.
+
+## Tool requirements
+
+* Python 3
+* `sudo pip3 install pytap2`
+
+## Using this tool
+
+Usage: `sudo python3 grepunch.py <PEER_NAT_IP>`
+This must run as root since it uses raw sockets, and creates a TUN device.
+
+Using something like `curl icanhazip.com`, on each machine, determine the NAT_A and NAT_B IPs for both machines. Then, on each machine, run `sudo python3 grepunch.py <NAT_B/A>` respectively.
+
+By default, this will create a _tun0_ interface with a special 169.254.100.1 IP on *both* machines. This IP will represent the *other peer* for each machine. 
+
+A realistic usage for this is:
+1) Knowing 1 of the IPs in advance (let's say, NAT_A).
+2) While being present at machine B, launch the tool with the IP of NAT_A. Also, learn the IP of NAT_B.
+3) At some later time, when finally present at machine A, launch the tool with the IP of NAT_B.
+
+## Why is this useful
+
+There are many uses cases for peer-to-peer comms without a mediating 3rd party server. However, the most improtant one (for me at least) is latency reduction. Using this tool, one can SSH between 2 machines behind NATs directly, without the additional latency of an intermediate server.
