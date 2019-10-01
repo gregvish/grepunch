@@ -1,7 +1,7 @@
 # grepunch
 ## A tool for GRE hole punching
 
-_Warning_: This won't work for all NATs. So far only few have been tested, but most worked.
+_Warning_: This won't work for all NATs. (Only for some subset of symmetric NATs). So far only few have been tested, but most worked.
 
 This tool enables direct peer-to-peer communication between 2 machines, each located behind a different **Symmetric NAT**, if both NATs support GRE traffic.
 The various types of NAT are described here: https://en.wikipedia.org/wiki/Network_address_translation#Methods_of_translation
